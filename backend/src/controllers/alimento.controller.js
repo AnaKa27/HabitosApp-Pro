@@ -38,9 +38,20 @@ const create = async (req, res) => {
     if (!grupo || typeof grupo !== "string") {
       return res.status(400).json({ error: "El campo 'grupo' es obligatorio y debe ser texto." });
     }
-    if (calorias_100g === undefined || isNaN(Number(calorias_100g))) {
-      return res.status(400).json({ error: "El campo 'calorias_100g' es obligatorio y debe ser numérico." });
-    }
+    const camposNutricionales = {
+  calorias_100g,
+  proteinas_100g: proteinas_100g ?? 0,
+  carbohidratos_100g: carbohidratos_100g ?? 0,
+  grasas_100g: grasas_100g ?? 0,
+};
+
+for (const [campo, valor] of Object.entries(camposNutricionales)) {
+  if (valor === undefined || valor === null || valor === "" || !Number.isFinite(Number(valor)) || Number(valor) < 0) {
+    return res.status(400).json({
+      error: `El campo '${campo}' debe ser numérico y no puede ser negativo.`,
+    });
+  }
+}
     const nuevo = await model.create({
       nombre,
       grupo,
