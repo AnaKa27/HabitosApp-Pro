@@ -6,9 +6,19 @@ const app = express();
 // Middleware para parsear JSON en el body de las peticiones
 app.use(express.json());
 
-// Endpoint simple para verificar que el servidor está arriba
+// Endpoint para verificar el estado de la API y consultar sus rutas
 app.get("/", (req, res) => {
-  res.status(200).json({ data: { mensaje: "API de HabitosApp Pro funcionando correctamente." } });
+  res.status(200).json({
+    data: {
+      mensaje: "API de HabitosApp Pro funcionando correctamente.",
+      rutas: {
+        categoriasHabito: "/api/categorias-habito",
+        habitos: "/api/habitos",
+        ejercicios: "/api/ejercicios",
+        alimentos: "/api/alimentos"
+      }
+    }
+  });
 });
 
 // Todas las rutas del CRUD quedan bajo el prefijo /api
