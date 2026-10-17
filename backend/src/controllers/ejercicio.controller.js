@@ -3,7 +3,11 @@ const handleDbError = require("../utils/handleDbError");
 
 const NIVELES = ["principiante", "intermedio", "avanzado"];
 
-// GET /api/ejercicios
+// Valida que el identificador recibido sea un número entero
+const isValidId = (id) => Number.isInteger(Number(id));
+/*****************************************************
+ * Obtiene todos los ejercicios registrados.
+ *****************************************************/
 const getAll = async (req, res) => {
   try {
     const ejercicios = await model.findAll();
@@ -13,12 +17,16 @@ const getAll = async (req, res) => {
   }
 };
 
-// GET /api/ejercicios/:id
+/**
+ * Obtiene un ejercicio mediante su identificador.
+ */
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!Number.isInteger(Number(id))) {
-      return res.status(400).json({ error: "El id debe ser un número entero." });
+    if (!isValidId(id)) {
+      return res.status(400).json({
+        error: "El id debe ser un número entero."
+      });
     }
     const ejercicio = await model.findById(id);
     if (!ejercicio) {
@@ -30,7 +38,9 @@ const getById = async (req, res) => {
   }
 };
 
-// POST /api/ejercicios
+/**
+ * Crea un nuevo ejercicio.
+ */
 const create = async (req, res) => {
   try {
     const { nombre, grupo_muscular, descripcion, nivel, calorias_por_minuto } = req.body;
@@ -50,12 +60,16 @@ const create = async (req, res) => {
   }
 };
 
-// PUT /api/ejercicios/:id
+/**
+ * Actualiza la información de un ejercicio.
+ */
 const update = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!Number.isInteger(Number(id))) {
-      return res.status(400).json({ error: "El id debe ser un número entero." });
+    if (!isValidId(id)) {
+      return res.status(400).json({
+        error: "El id debe ser un número entero."
+      });
     }
     const campos = req.body;
     if (!campos || Object.keys(campos).length === 0) {
@@ -74,12 +88,16 @@ const update = async (req, res) => {
   }
 };
 
-// DELETE /api/ejercicios/:id
+/**
+ * Elimina un ejercicio por identificador.
+ */
 const remove = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!Number.isInteger(Number(id))) {
-      return res.status(400).json({ error: "El id debe ser un número entero." });
+    if (!isValidId(id)) {
+      return res.status(400).json({
+        error: "El id debe ser un número entero."
+      });
     }
     const eliminado = await model.remove(id);
     if (!eliminado) {
